@@ -521,8 +521,6 @@ public final class Database
 	 */
 	public void useDatabase( File path ) throws IOException
 	{	dump();
-		dump_html();
-		dump_xml();
 		tables.clear();	// close old database if there is one
 		this.location = path;
 	}
@@ -579,50 +577,20 @@ public final class Database
 		{	for( Iterator i = values.iterator(); i.hasNext(); )
 			{	Table current = (Table ) i.next();
 				if( current.isDirty() )
-				{	Writer out =
-						new FileWriter(
-								new File(location, current.name() + ".csv"));
-					current.export( new CSVExporter(out) );
+				{	Writer out1 = new FileWriter(new File(location, current.name() + ".csv"));
+					Writer out2 = new FileWriter(new File(location, current.name() + ".html"));
+					Writer out3 = new FileWriter(new File(location, current.name() + ".xml"));
+								
+					current.export( new CSVExporter(out1) );
+					current.export( new HTMLExporter(out2) );
+					current.export( new XMLExporter(out3) );
 					
-					out.close();
+					out1.close();out2.close();out3.close();
 				}
 			}
 		}
 	}
-	
-	public void dump_html() throws IOException
-	{	Collection values = tables.values();
-		if( values != null )
-		{	for( Iterator i = values.iterator(); i.hasNext(); )
-			{	Table current = (Table ) i.next();
-				if( current.isDirty() )
-				{	Writer out =
-						new FileWriter(
-								new File(location, current.name() + ".html"));
-					current.export( new HTMLExporter(out) );
-					
-					out.close();
-				}
-			}
-		}
-	}
-	
-	public void dump_xml() throws IOException
-	{	Collection values = tables.values();
-		if( values != null )
-		{	for( Iterator i = values.iterator(); i.hasNext(); )
-			{	Table current = (Table ) i.next();
-				if( current.isDirty() )
-				{	Writer out =
-						new FileWriter(
-								new File(location, current.name() + ".xml"));
-					current.export( new XMLExporter(out) );
-					
-					out.close();
-				}
-			}
-		}
-	}
+
 
 	/** Return the number of rows that were affected by the most recent
 	 *  {@link #execute} call. Zero is returned for all operations except
@@ -1632,8 +1600,6 @@ public final class Database
 			}
 
 			theDatabase.dump();
-			theDatabase.dump_html();
-			theDatabase.dump_xml();
 			System.out.println("Database PASSED");
 			System.exit(0);
 		}
