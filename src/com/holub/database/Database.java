@@ -890,8 +890,6 @@ public final class Database
 			}
 		}
 
-			
-		
 		return identifiers;
 	}
 

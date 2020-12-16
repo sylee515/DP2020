@@ -816,18 +816,27 @@ import com.holub.tools.ArrayIterator;
 		public void testStore() throws IOException, ClassNotFoundException { // Flush the table to disk, then reread it.
 																				// Subsequent tests that use the
 
-//			Writer out = new FileWriter("people");
+			Writer out = new FileWriter("people");
+			people.export(new CSVExporter(out));
+			out.close();
+
+			Reader in = new FileReader("people");
+			people = new ConcreteTable(new CSVImporter(in));
+			in.close();
+		}
+		
+		public void testStore_xml() throws IOException, ClassNotFoundException { // Flush the table to disk, then reread it.
+
 			Writer out = new FileWriter("C:/dp2020/people.xml");
-//			people.export(new CSVExporter(out));
 			people.export(new XMLExporter(out));
 			out.close();
 
-//			Reader in = new FileReader("people");
 			Reader in = new FileReader("C:/dp2020/people.xml");
-//			people = new ConcreteTable(new XMLImporter(in));
-			people = new ConcreteTable(new XMLImporter(in));
+			Table new_people = new ConcreteTable(new XMLImporter(in));
 			in.close();
-		}
+			
+			
+		} 
 
 		public void testJoin() {
 			// First test a two-way join

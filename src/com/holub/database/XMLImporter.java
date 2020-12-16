@@ -12,6 +12,7 @@ public class XMLImporter implements Table.Importer{
 	private BufferedReader  in;			// null once end-of-file reached
 	private String[]        columnNames;
 	private String          tableName;
+	private String s;
 
 	public XMLImporter( Reader in )
 	{	this.in = in instanceof BufferedReader
@@ -23,20 +24,25 @@ public class XMLImporter implements Table.Importer{
 	{
 		ArrayList<String> cols = new ArrayList<String>();
 		String root = in.readLine();
-		in.mark(0);
-		tableName = in.readLine().trim().replace("<","").replace(">", "");
-		int i = 0;
-		while(true) {
-			String s = in.readLine().trim();
-			if(s.matches("<[\\w]+>[\\w\\s]+<[/\\w]+>")) {
-				cols.add(s.replace("<","").replaceAll(">.+", ""));
+		in.mark(1000);
+		if(in != null) {
+			tableName = in.readLine();
+			if(tableName != null)
+				tableName = tableName.trim().replace("<","").replace(">", "");
+			int i = 0;
+			while((s = in.readLine())!=null) {
+				s=s.trim();
+				if(s.matches("<[\\w]+>[\\w\\s]+<[/\\w]+>")) {
+					cols.add(s.replace("<","").replaceAll(">.+", ""));
+				}
+				else 
+					break;
 			}
-			else 
-				break;
+			columnNames = cols.toArray(new String[cols.size()]);
+			System.out.println(cols);
+			in.reset();
 		}
-		columnNames = cols.toArray(new String[cols.size()]);
-		System.out.println(cols);
-		in.reset();
+		
 	}
 		
 	public String loadTableName()		throws IOException
@@ -55,17 +61,19 @@ public class XMLImporter implements Table.Importer{
 		
 		int i = 0;
 		if(in != null) {
-			String line = in.readLine().trim();
-			while((line = in.readLine().trim()) != null) {
+			String line = in.readLine();
+			if(line !=null)
+				line = line.trim();
+			while((line = in.readLine()) != null) {
+				line = line.trim();
 				if(line.matches("<[\\w]+>[\\w\\s]+<[/\\w]+>")) {
 					records[i++] = line.replaceAll("<[\\w]+>", "").replaceAll("<.+", "");
 					System.out.println(line.replaceAll("<[\\w]+>", "").replaceAll("<.+", ""));
 				}
-				else if(line.contentEquals("</"+tableName+">")) {
+				else if(line.equals("</"+tableName+">")) {
 					row = new ArrayIterator(records);
 					break;
 				}
-
 			}
 		}
 		

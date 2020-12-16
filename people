@@ -1,17 +1,5 @@
-<root>
-	<people>
-		<last>Holub</last>
-		<first>Allen</first>
-		<addrId>1</addrId>
-	</people>
-	<people>
-		<last>Flintstone</last>
-		<first>Wilma</first>
-		<addrId>2</addrId>
-	</people>
-	<people>
-		<last>Flintstone</last>
-		<first>Fred</first>
-		<addrId>2</addrId>
-	</people>
-</root>
+people
+last,	first,	addrId
+Holub,	Allen,	1
+Flintstone,	Wilma,	2
+Flintstone,	Fred,	2

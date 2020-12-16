@@ -54,8 +54,6 @@ public class HTMLExporter implements Table.Exporter{
 			
 		}
 		tableH = false;
-		
-		
 	}
 	
 	public void startTable() throws IOException {out.write("<table>\n");}
